@@ -81,8 +81,10 @@ public class TerrainFace
 				// Normalize the vector so it becomes a sphere.
 				pointOnUnitCube.Normalize();
 
+				var height = settings.TerrainGenerator.Evaluate(pointOnUnitCube);
+
 				// Set the size of the planet.
-				pointOnUnitCube.Scale(Vector3.one * settings.Scale);
+				pointOnUnitCube.Scale(Vector3.one * settings.Scale * height);
 
 				vertices.Add(pointOnUnitCube);
 			}

@@ -1,4 +1,5 @@
 ﻿using Assets.Scenes.Scripts;
+using Assets.Scenes.Scripts.TerrainGenerator;
 using System.Linq;
 using UnityEngine;
 
@@ -80,7 +81,8 @@ public class Planet : MonoBehaviour
 		return new PlanetSettings()
 		{
 			Resolution = this.Resolution,
-			Scale = this.Scale
+			Scale = this.Scale,
+			TerrainGenerator = new NoiseTerrainGenerator()
 		};
 	}
 }
