@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scenes.Scripts;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class TerrainFace
 	/// <summary>
 	/// The resolution at which this TerrainFace is created.
 	/// </summary>
-	private int resolution;
+	private PlanetSettings settings;
 
 	/// <summary>
 	/// This tells us what the local up is for this TerrainFace.
@@ -31,13 +32,19 @@ public class TerrainFace
 	/// </summary>
 	private Mesh mesh;
 
-	public TerrainFace(Mesh mesh, int resolution, Vector3 up)
+	public TerrainFace(Mesh mesh, Vector3 up, PlanetSettings settings)
 	{
 		this.mesh = mesh;
-		this.resolution = resolution;
+		this.settings = settings;
 		this.localUp = up;
 		this.localXAxis = new Vector3(up.y, up.z, up.x);
 		this.localZAxis = Vector3.Cross(localUp, localXAxis);
+	}
+
+	public void UpdateSettings(PlanetSettings settings)
+	{
+		this.settings = settings;
+		this.UpdateMesh();
 	}
 
 	/// <summary>
@@ -52,24 +59,14 @@ public class TerrainFace
 	}
 
 	/// <summary>
-	/// Function to set the resolution of the terrainface. This will also
-	/// trigger the function to update the mesh.
-	/// </summary>
-	/// <param name="resolution"></param>
-	public void UpdateResolution(int resolution)
-	{
-		this.resolution = resolution;
-		this.UpdateMesh();
-	}
-
-	/// <summary>
 	/// Function to generate all the vertices of this TerrainFace.
 	/// </summary>
 	/// <returns></returns>
 	private Vector3[] CreateVertices()
 	{
 		// Create a float of the resolution. Otherwise we would get integer division.
-		var floatResolution = this.resolution * 1f - 1;
+		var floatResolution = this.settings.Resolution * 1f - 1;
+		var resolution = this.settings.Resolution;
 		var vertices = new List<Vector3>();
 
 		for (int y = 0; y < resolution; y++)
@@ -102,6 +99,7 @@ public class TerrainFace
 	{
 		// Init a list to temporarily store the triangles indices.
 		var triangles = new List<int>();
+		var resolution = this.settings.Resolution;
 
 		// Iterate over each vertex in the mesh.
 		for (int y = 0; y < resolution; y++)

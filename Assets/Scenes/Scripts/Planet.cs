@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using Assets.Scenes.Scripts;
+using System.Linq;
 using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
-	/// <summary>
-	/// The resoltuion of the object ranging between 1 and 256.
-	/// </summary>
+	#region Settings
 	[Range(2, 256)]
-	public int Resolution = 2;
+	public int Resolution;
+
+	[Range(1, 100)]
+	public int Scale;
+	#endregion
 
 	/// <summary>
 	/// Information about each side of the planet.
@@ -32,9 +35,12 @@ public class Planet : MonoBehaviour
 		// Initialize if needed.
 		this.Initialize();
 
+		// Get the current settings.
+		var settings = GetSettings();
+
 		// Update all terrainFaces.
 		for (var i = 0; i < directions.Length; i++)
-			terrainFaces[i].UpdateResolution(Resolution);
+			terrainFaces[i].UpdateSettings(settings);
 	}
 
 	public void Initialize()
@@ -63,9 +69,18 @@ public class Planet : MonoBehaviour
 				meshFilters[i].sharedMesh = new Mesh();
 			}
 
-			faces[i] = new TerrainFace(meshFilters[i].sharedMesh, Resolution, directions[i]);
+			faces[i] = new TerrainFace(meshFilters[i].sharedMesh, directions[i], GetSettings());
 		}
 
 		return faces;
+	}
+
+	private PlanetSettings GetSettings()
+	{
+		return new PlanetSettings()
+		{
+			Resolution = this.Resolution,
+			Scale = this.Scale
+		};
 	}
 }
