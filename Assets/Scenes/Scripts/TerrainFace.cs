@@ -84,7 +84,7 @@ public class TerrainFace
 				var height = settings.TerrainGenerator.Evaluate(pointOnUnitCube);
 
 				// Set the size of the planet.
-				pointOnUnitCube.Scale(Vector3.one * settings.Scale * height);
+				pointOnUnitCube *= settings.Scale * height;
 
 				vertices.Add(pointOnUnitCube);
 			}

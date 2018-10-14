@@ -1,5 +1,6 @@
 ﻿using Assets.Scenes.Scripts;
 using Assets.Scenes.Scripts.TerrainGenerator;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class Planet : MonoBehaviour
 
 	[Range(1, 100)]
 	public float Scale;
+
+	public List<TerrainFilter> Filters = new List<TerrainFilter>();
 	#endregion
 
 	/// <summary>
@@ -78,11 +81,18 @@ public class Planet : MonoBehaviour
 
 	private PlanetSettings GetSettings()
 	{
+		// Determine the generator based on the settings.
+		ITerrainGenerator geneator = null;
+		if (Filters.Any())
+			geneator = new NoiseTerrainGenerator(Filters);
+		else
+			geneator = new FlatTerrainGenerator();
+
 		return new PlanetSettings()
 		{
 			Resolution = this.Resolution,
 			Scale = this.Scale,
-			TerrainGenerator = new NoiseTerrainGenerator()
+			TerrainGenerator = geneator
 		};
 	}
 }
