@@ -9,7 +9,7 @@ public class Planet : MonoBehaviour
 	public int Resolution;
 
 	[Range(1, 100)]
-	public int Scale;
+	public float Scale;
 	#endregion
 
 	/// <summary>
