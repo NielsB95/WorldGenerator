@@ -77,7 +77,7 @@ public class TerrainFace
 			for (int x = 0; x < resolution; x++)
 			{
 				var pointOnUnitCube = new Vector3();
-				pointOnUnitCube += this.localUp * -1;
+				pointOnUnitCube += this.localUp;
 				pointOnUnitCube += this.localXAxis * (((x / floatResolution) - .5f) * 2);
 				pointOnUnitCube += this.localZAxis * (((y / floatResolution) - .5f) * 2);
 
@@ -116,15 +116,15 @@ public class TerrainFace
 					// |    |
 					// 3 -- 2
 					triangles.Add(currentIndex);
-					triangles.Add(currentIndex + resolution);
 					triangles.Add(currentIndex + resolution + 1);
+					triangles.Add(currentIndex + resolution);
 
 					// 1 -- 2
 					// |    |
 					// x -- 3
 					triangles.Add(currentIndex);
-					triangles.Add(currentIndex + resolution + 1);
 					triangles.Add(currentIndex + 1);
+					triangles.Add(currentIndex + resolution + 1);
 				}
 			}
 		}
