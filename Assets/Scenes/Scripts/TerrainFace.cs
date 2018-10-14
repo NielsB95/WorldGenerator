@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TerrainFace
 {
-
 	/// <summary>
 	/// The resolution at which this TerrainFace is created.
 	/// </summary>
