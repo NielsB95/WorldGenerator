@@ -13,7 +13,7 @@ public class TerrainFace
 	/// <summary>
 	/// This tells us what the local up is for this TerrainFace.
 	/// </summary>
-	private Vector3 localUp;
+	private Vector3 localYAxis;
 
 	/// <summary>
 	/// The TerrainFace can be rotated and therfore the x axis can be different. For normalization
@@ -36,9 +36,9 @@ public class TerrainFace
 	{
 		this.mesh = mesh;
 		this.settings = settings;
-		this.localUp = up;
+		this.localYAxis = up;
 		this.localXAxis = new Vector3(up.y, up.z, up.x);
-		this.localZAxis = Vector3.Cross(localUp, localXAxis);
+		this.localZAxis = Vector3.Cross(localYAxis, localXAxis);
 	}
 
 	public void UpdateSettings(PlanetSettings settings)
@@ -74,7 +74,7 @@ public class TerrainFace
 			for (int x = 0; x < resolution; x++)
 			{
 				var pointOnUnitCube = new Vector3();
-				pointOnUnitCube += this.localUp;
+				pointOnUnitCube += this.localYAxis;
 				pointOnUnitCube += this.localXAxis * (((x / floatResolution) - .5f) * 2);
 				pointOnUnitCube += this.localZAxis * (((y / floatResolution) - .5f) * 2);
 
