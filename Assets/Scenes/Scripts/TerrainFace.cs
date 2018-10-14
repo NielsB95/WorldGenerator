@@ -80,6 +80,10 @@ public class TerrainFace
 
 				// Normalize the vector so it becomes a sphere.
 				pointOnUnitCube.Normalize();
+
+				// Set the size of the planet.
+				pointOnUnitCube.Scale(Vector3.one * settings.Scale);
+
 				vertices.Add(pointOnUnitCube);
 			}
 		}
