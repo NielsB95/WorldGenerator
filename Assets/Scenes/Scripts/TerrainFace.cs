@@ -40,6 +40,9 @@ public class TerrainFace
 		this.localZAxis = Vector3.Cross(localUp, localXAxis);
 	}
 
+	/// <summary>
+	/// This function will re-calculate all the vertices and triangles.
+	/// </summary>
 	public void UpdateMesh()
 	{
 		this.mesh.Clear();
@@ -48,12 +51,21 @@ public class TerrainFace
 		this.mesh.RecalculateNormals();
 	}
 
+	/// <summary>
+	/// Function to set the resolution of the terrainface. This will also
+	/// trigger the function to update the mesh.
+	/// </summary>
+	/// <param name="resolution"></param>
 	public void UpdateResolution(int resolution)
 	{
 		this.resolution = resolution;
 		this.UpdateMesh();
 	}
 
+	/// <summary>
+	/// Function to generate all the vertices of this TerrainFace.
+	/// </summary>
+	/// <returns></returns>
 	private Vector3[] CreateVertices()
 	{
 		// Create a float of the resolution. Otherwise we would get integer division.
@@ -82,6 +94,10 @@ public class TerrainFace
 		return vertices.ToArray();
 	}
 
+	/// <summary>
+	/// Function to generate all the Triangles for this face.
+	/// </summary>
+	/// <returns></returns>
 	private int[] CreateTriangles()
 	{
 		// Init a list to temporarily store the triangles indices.
