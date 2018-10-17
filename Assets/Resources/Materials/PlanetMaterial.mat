@@ -65,12 +65,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Max: 6.1473894
+    - _Max: 6.148142
     - _Metallic: 0
-    - _Min: 5.127636
+    - _Min: 5.125128
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Scale: 41.8
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Speed: 1
@@ -79,7 +80,7 @@ Material:
     - _ZWrite: 1
     - _tintAmount: 0.5
     m_Colors:
-    - _Center: {r: 1, g: 691.0783, b: 1, a: 0}
+    - _Center: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.6037736, g: 0.3047348, b: 0.5148022, a: 1}
     - _ColorA: {r: 1, g: 1, b: 1, a: 1}
     - _ColorB: {r: 0, g: 0, b: 0, a: 1}
