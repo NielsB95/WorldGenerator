@@ -13,7 +13,7 @@ public class Planet : MonoBehaviour
     [Range(1, 100)]
     public float Scale;
 
-    public TerrainFilter Filter = new TerrainFilter();
+    public List<TerrainFilter> Filters = new List<TerrainFilter>();
     #endregion
 
     /// <summary>
@@ -115,8 +115,8 @@ public class Planet : MonoBehaviour
     {
         // Determine the generator based on the settings.
         ITerrainGenerator geneator = null;
-        if (Filter.Layers > 0)
-            geneator = new NoiseTerrainGenerator(Filter);
+        if (Filters.Any())
+            geneator = new NoiseTerrainGenerator(Filters);
         else
             geneator = new FlatTerrainGenerator();
 

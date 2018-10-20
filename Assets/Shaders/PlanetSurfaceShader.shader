@@ -64,14 +64,11 @@ Shader "Custom/PlanetSurfaceShader" {
                 // color ("SV_Target" semantic)
                 half4 frag (v2f i) : SV_Target
                 {
+                    //float dist = length(i.worldPosition);
                     float dist = distance(_Center, i.worldPosition) / _Scale;
+                
                     float percentage = (dist - _Min) / (_Max - _Min);
-                    
-                    float4 color1 = float4(1, 0, 0, 1);
-                    float4 color2 = float4(0, 0, 1, 1);
-                    float4 color = lerp(color1, color2, percentage);
-                    
-                    return color;
+                    return half4(percentage, percentage, percentage, 1);
                 }
                 ENDCG
             }
