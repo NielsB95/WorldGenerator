@@ -5,41 +5,31 @@ namespace Assets.Scenes.Scripts.TerrainGenerator
 {
     public class NoiseTerrainGenerator : ITerrainGenerator
     {
-        private Noise noise;
-        private List<TerrainFilter> filters;
+        private readonly Noise noise;
+        private readonly TerrainFilter filter;
 
-        public NoiseTerrainGenerator(List<TerrainFilter> filters)
+        public NoiseTerrainGenerator(TerrainFilter filter)
         {
             this.noise = new Noise();
-            this.filters = filters;
+            this.filter = filter;
         }
 
         public float Evaluate(Vector3 position)
         {
-            var height = 1f;
+            float noiseValue = 0;
+            float frequency = filter.BaseRoughness;
+            float amplitude = 1;
 
-            foreach (var filter in filters)
+            for (int i = 0; i < filter.Layers; i++)
             {
-                var filterValue = 1 + noise.Evaluate(position * filter.Roughness + filter.Center);
-
-                // Apply strengh
-                filterValue *= filter.Strength;
-
-                // Normalize to a value between 0 and 1
-                filterValue = (filterValue + 1) / .5f;
-
-                if (filter.Inverted)
-                    filterValue *= -1;
-
-                // Don't update if we disable the filter.
-                if (filter.Disable)
-                    continue;
-
-                height *= filterValue;
+                float v = noise.Evaluate(position * frequency + filter.Center);
+                noiseValue += (v + 1) * .5f * amplitude;
+                frequency *= filter.Roughness;
+                amplitude *= filter.Persistence;
             }
 
-            height -= filters.Count;
-            return height;
+            noiseValue = Mathf.Max(0, noiseValue - filter.MinValue);
+            return noiseValue * filter.Strength;
         }
     }
 }
