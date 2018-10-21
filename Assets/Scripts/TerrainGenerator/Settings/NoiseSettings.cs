@@ -17,6 +17,7 @@ namespace TerrainGenerator.Settings
         [Range(0.001f, 10)]
         public float Strength = 1;
 
+        [Range(0, 10)]
         public float MinValue = 0;
 
         public Vector3 Center;

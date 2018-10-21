@@ -38,38 +38,6 @@ namespace TerrainGenerator.Generators
 
             noiseValue = Mathf.Max(0, noiseValue - settings.MinValue);
             return noiseValue * settings.Strength;
-
-
-            //foreach (var filter in filters)
-            //{
-            //    var filterValue = 1 + noise.Evaluate(position * filter.Roughness + filter.Center);
-
-            //    if ((height * filterValue) < filter.MinValue && filters.IndexOf(filter) != 0)
-            //        continue;
-
-            //    // Apply strengh
-            //    filterValue *= filter.Strength;
-
-            //    // Normalize to a value between 0 and 1
-            //    filterValue = (filterValue + 1) / .5f;
-
-            //    // Don't update if we disable the filter.
-            //    if (filter.Disable)
-            //        continue;
-
-            //    height *= filterValue;
-            //}
-
-            //foreach (var filter in filters)
-            //{
-            //    // Value betwoon 0 an 1
-            //    var filterValue = noise.Evaluate(position * filter.Roughness + filter.Center);
-
-
-            //}
-
-
-            //return elevation;
         }
     }
 }

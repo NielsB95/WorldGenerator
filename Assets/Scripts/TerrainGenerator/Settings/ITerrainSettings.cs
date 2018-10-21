@@ -12,6 +12,5 @@ namespace TerrainGenerator.Settings
     public interface ITerrainSettings
     {
         TerrainType TerrainType { get; }
-        bool Disabled { get; }
     }
 }

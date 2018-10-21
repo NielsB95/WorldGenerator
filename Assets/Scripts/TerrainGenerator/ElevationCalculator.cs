@@ -19,9 +19,19 @@ namespace TerrainGenerator
         public float Evaluate(Vector3 position)
         {
             var elevation = 1f;
+            float? firstLayerValue = null;
 
             foreach (var geneator in this.generators)
-                elevation += geneator.Evaluate(position);
+            {
+                var value = geneator.Evaluate(position);
+
+                if (!firstLayerValue.HasValue)
+                    firstLayerValue = value;
+
+                //if (firstLayerValue <= 0)
+                //break;
+                elevation += value;
+            }
 
             return elevation;
         }

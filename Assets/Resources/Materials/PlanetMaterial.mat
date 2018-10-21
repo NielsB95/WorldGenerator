@@ -65,13 +65,13 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Max: 6.148142
+    - _Max: 1.2465123
     - _Metallic: 0
-    - _Min: 5.125128
+    - _Min: 1.0092613
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 41.8
+    - _Scale: 15.3
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Speed: 1
