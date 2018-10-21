@@ -1,13 +1,12 @@
 ﻿using Assets.Scenes.Scripts;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using TerrainGenerator;
-using TerrainGenerator.Settings;
 using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
+    /// <summary>
+    /// Settings of the planet that specify the shape and color.
+    /// </summary>
     public PlanetSettings settings;
 
     /// <summary>
@@ -62,12 +61,7 @@ public class Planet : MonoBehaviour
             PlanetMinMax.AddValue(terrainFaces[0].TerrainMinMax.Max);
         }
 
-        this.PlanetMaterial.SetFloat("_Min", PlanetMinMax.Min);
-        this.PlanetMaterial.SetFloat("_Max", PlanetMinMax.Max);
-        this.PlanetMaterial.SetFloat("_Scale", settings.Scale);
-        this.PlanetMaterial.SetFloatArray("_ColorThresholds", settings.WorldColours.Select(x => x.Height).ToArray());
-        this.PlanetMaterial.SetVectorArray("_Colors", settings.WorldColours.Select(x => x.Colour.ColorToVector()).ToArray());
-        this.PlanetMaterial.SetInt("_ColorCount", settings.WorldColours.Count());
+        this.SetShaderValues();
     }
 
     public void Initialize()
@@ -103,5 +97,15 @@ public class Planet : MonoBehaviour
         }
 
         return faces;
+    }
+
+    private void SetShaderValues()
+    {
+        this.PlanetMaterial.SetFloat("_Min", PlanetMinMax.Min);
+        this.PlanetMaterial.SetFloat("_Max", PlanetMinMax.Max);
+        this.PlanetMaterial.SetFloat("_Scale", settings.Scale);
+        this.PlanetMaterial.SetVectorArray("_Colors", settings.WorldColours.Select(x => x.Colour.ColorToVector()).ToArray());
+        this.PlanetMaterial.SetFloatArray("_ColorThresholds", settings.WorldColours.Select(x => x.Height).ToArray());
+        this.PlanetMaterial.SetInt("_ColorCount", settings.WorldColours.Count());
     }
 }
