@@ -27,8 +27,6 @@ Shader "Custom/PlanetSurfaceShader" {
                 // use "frag" function as the pixel (fragment) shader
                 #pragma fragment frag
                 
-                #include "UnityCG.cginc"
-                
                 // vertex shader inputs
                 struct appdata
                 {

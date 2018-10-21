@@ -1,6 +1,7 @@
 ﻿using Assets.Scenes.Scripts;
 using System;
 using System.Collections.Generic;
+using TerrainGenerator;
 using UnityEngine;
 
 public class TerrainFace
@@ -32,6 +33,8 @@ public class TerrainFace
     /// </summary>
     private Mesh mesh;
 
+    private ElevationCalculator elevationCalculator;
+
     public MinMax TerrainMinMax;
 
     public TerrainFace(Mesh mesh, Vector3 up, PlanetSettings settings)
@@ -42,11 +45,13 @@ public class TerrainFace
         this.localXAxis = new Vector3(up.y, up.z, up.x);
         this.localZAxis = Vector3.Cross(localYAxis, localXAxis);
         this.TerrainMinMax = new MinMax();
+        this.elevationCalculator = new ElevationCalculator(settings.LayerSettings);
     }
 
     public void UpdateSettings(PlanetSettings settings)
     {
         this.settings = settings;
+        this.elevationCalculator.Update(settings.LayerSettings);
         this.UpdateMesh();
     }
 
@@ -87,7 +92,7 @@ public class TerrainFace
                 // Normalize the vector so it becomes a sphere.
                 pointOnUnitCube.Normalize();
 
-                var height = settings.TerrainGenerator.Evaluate(pointOnUnitCube);
+                var height = elevationCalculator.Evaluate(pointOnUnitCube);
 
                 // Add this new height value to TerrainMinMax.
                 this.TerrainMinMax.AddValue(height);
@@ -101,7 +106,7 @@ public class TerrainFace
 
         // Check if we have 
         if (vertices.Count != resolution * resolution)
-            throw new InvalidOperationException(string.Format("Number of vertices is wrong! It is {0} but it should be", vertices.Count, resolution * resolution));
+            throw new InvalidOperationException(string.Format("Number of vertices is wrong! It is {0} but it should be {1}", vertices.Count, resolution * resolution));
 
         return vertices.ToArray();
     }

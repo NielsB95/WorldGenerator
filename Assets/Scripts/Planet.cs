@@ -1,20 +1,14 @@
 ﻿using Assets.Scenes.Scripts;
-using Assets.Scenes.Scripts.TerrainGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using TerrainGenerator;
+using TerrainGenerator.Settings;
 using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
-    #region Settings
-    [Range(2, 256)]
-    public int Resolution;
-
-    [Range(1, 100)]
-    public float Scale;
-
-    public List<TerrainFilter> Filters = new List<TerrainFilter>();
-    #endregion
+    public PlanetSettings settings;
 
     /// <summary>
     /// Material for this planet.
@@ -53,9 +47,6 @@ public class Planet : MonoBehaviour
     {
         // Initialize if needed.
         this.Initialize();
-
-        // Get the current settings.
-        var settings = GetSettings();
 
         // Reset the PlanetMinMax values. We will set them again when we update
         // the TerrainFaces.
@@ -105,33 +96,9 @@ public class Planet : MonoBehaviour
                 meshFilters[i].sharedMesh = new Mesh();
             }
 
-            faces[i] = new TerrainFace(meshFilters[i].sharedMesh, directions[i], GetSettings());
+            faces[i] = new TerrainFace(meshFilters[i].sharedMesh, directions[i], settings);
         }
 
         return faces;
-    }
-
-    private PlanetSettings GetSettings()
-    {
-        // Determine the generator based on the settings.
-        ITerrainGenerator geneator = null;
-        if (Filters.Any())
-            geneator = new NoiseTerrainGenerator(Filters);
-        else
-            geneator = new FlatTerrainGenerator();
-
-        return new PlanetSettings()
-        {
-            Resolution = this.Resolution,
-            Scale = this.Scale,
-            TerrainGenerator = geneator
-        };
-    }
-
-    /// <summary>
-    /// Physics update
-    /// </summary>
-    void FixedUpdate()
-    {
     }
 }
