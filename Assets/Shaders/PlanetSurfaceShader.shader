@@ -1,8 +1,4 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "Custom/PlanetSurfaceShader" {
+﻿Shader "Custom/PlanetSurfaceShader" {
 	
     // The properties which can be set from the inspector.
     Properties {        
@@ -15,6 +11,7 @@ Shader "Custom/PlanetSurfaceShader" {
         _Min ("Min", float) = 0
         
         _Scale ("Scale", float) = 1
+        _ColorCount ("Number of colors", int) = 0
     }
     
     SubShader
@@ -28,22 +25,22 @@ Shader "Custom/PlanetSurfaceShader" {
                 #pragma fragment frag
                 
                 // vertex shader inputs
-                struct appdata
+                struct vertexInput
                 {
                     float4 vertex : POSITION; // vertex position
                 };
 
                 // vertex shader outputs ("vertex to fragment")
-                struct v2f
+                struct vertexOutput
                 {
                     float4 worldPosition: TEXCOORD0;
                     float4 vertex : SV_POSITION; // clip space position
                 };
 
                 // vertex shader
-                v2f vert (appdata v)
+                vertexOutput vert (vertexInput v)
                 {
-                    v2f o;
+                    vertexOutput o;
                     // transform position to clip space
                     // (multiply with model*view*projection matrix)
                     o.worldPosition = v.vertex;
@@ -57,17 +54,29 @@ Shader "Custom/PlanetSurfaceShader" {
                 float _Min;
                 float _Max;
                 float _Scale;
+                float _ColorCount;
+                float _ColorThresholds[100];
+                float4 _Colors[100];
             
-                // pixel shader; returns low precision ("fixed4" type)
-                // color ("SV_Target" semantic)
-                half4 frag (v2f i) : SV_Target
+                half4 frag (vertexOutput i) : SV_Target
                 {
                     float dist = distance(_Center, i.worldPosition) / _Scale;
                     float percentage = (dist - _Min) / (_Max - _Min);
                     
-                    float4 color1 = float4(1, 0, 0, 1);
-                    float4 color2 = float4(0, 0, 1, 1);
-                    float4 color = lerp(color1, color2, percentage);
+                    // Check if we have specified any colours.
+                    if(_ColorCount == 0) {
+                        return float4(0, 1, 1, 1);
+                    }
+                        
+                    //float4 color2 = float4(0, 0, 1, 1);
+                    //float4 color = lerp(color1, color2, percentage);
+                    
+                    float4 color = _Colors[0];
+                    for(int i = 0; i < _ColorCount; i++) {
+                        if(percentage > _ColorThresholds[i]) {
+                            color = _Colors[i];
+                        }
+                    }
                     
                     return color;
                 }

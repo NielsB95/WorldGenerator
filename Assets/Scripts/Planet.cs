@@ -65,6 +65,9 @@ public class Planet : MonoBehaviour
         this.PlanetMaterial.SetFloat("_Min", PlanetMinMax.Min);
         this.PlanetMaterial.SetFloat("_Max", PlanetMinMax.Max);
         this.PlanetMaterial.SetFloat("_Scale", settings.Scale);
+        this.PlanetMaterial.SetFloatArray("_ColorThresholds", settings.WorldColours.Select(x => x.Height).ToArray());
+        this.PlanetMaterial.SetVectorArray("_Colors", settings.WorldColours.Select(x => x.Colour.ColorToVector()).ToArray());
+        this.PlanetMaterial.SetInt("_ColorCount", settings.WorldColours.Count());
     }
 
     public void Initialize()
