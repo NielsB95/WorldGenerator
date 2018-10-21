@@ -17,18 +17,6 @@ public class TerrainFace
     private Vector3 localYAxis;
 
     /// <summary>
-    /// The TerrainFace can be rotated and therfore the x axis can be different. For normalization
-    /// we determine what the local x axis is.
-    /// </summary>
-    private Vector3 localXAxis;
-
-    /// <summary>
-    /// Due to the rotation of the TerrainFace the Z axis can be altered. For normalization
-    /// we determine what the local z axis is.
-    /// </summary>
-    private Vector3 localZAxis;
-
-    /// <summary>
     /// The mesh which stores all the information about this TerrainFace.
     /// </summary>
     private Mesh mesh;
@@ -41,11 +29,9 @@ public class TerrainFace
     {
         this.mesh = mesh;
         this.settings = settings;
-        this.localYAxis = up;
-        this.localXAxis = new Vector3(up.y, up.z, up.x);
-        this.localZAxis = Vector3.Cross(localYAxis, localXAxis);
         this.TerrainMinMax = new MinMax();
         this.elevationCalculator = new ElevationCalculator(settings.LayerSettings);
+        this.localYAxis = up;
     }
 
     public void UpdateSettings(PlanetSettings settings)
@@ -76,21 +62,15 @@ public class TerrainFace
         this.TerrainMinMax.Reset();
 
         // Create a float of the resolution. Otherwise we would get integer division.
-        var floatResolution = this.settings.Resolution * 1f - 1;
         var resolution = this.settings.Resolution;
-        var vertices = new List<Vector3>();
+        var vertices = Vertices.Create(resolution, this.localYAxis, spherical: true);
 
         for (int y = 0; y < resolution; y++)
         {
             for (int x = 0; x < resolution; x++)
             {
-                var pointOnUnitCube = new Vector3();
-                pointOnUnitCube += this.localYAxis;
-                pointOnUnitCube += this.localXAxis * (((x / floatResolution) - .5f) * 2);
-                pointOnUnitCube += this.localZAxis * (((y / floatResolution) - .5f) * 2);
-
-                // Normalize the vector so it becomes a sphere.
-                pointOnUnitCube.Normalize();
+                var index = x + (y * resolution);
+                var pointOnUnitCube = vertices[index];
 
                 var height = elevationCalculator.Evaluate(pointOnUnitCube);
 
@@ -100,14 +80,10 @@ public class TerrainFace
                 // Set the size of the planet.
                 pointOnUnitCube *= settings.Scale * height;
 
-                vertices.Add(pointOnUnitCube);
+                vertices[index] = pointOnUnitCube;
             }
         }
 
-        // Check if we have 
-        if (vertices.Count != resolution * resolution)
-            throw new InvalidOperationException(string.Format("Number of vertices is wrong! It is {0} but it should be {1}", vertices.Count, resolution * resolution));
-
-        return vertices.ToArray();
+        return vertices;
     }
 }
