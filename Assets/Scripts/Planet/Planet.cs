@@ -14,6 +14,8 @@ public class Planet : MonoBehaviour
     /// </summary>
     public Material PlanetMaterial;
 
+    public Material WaterMaterial;
+
     /// <summary>
     /// Information about each side of the planet.
     /// </summary>
@@ -25,7 +27,13 @@ public class Planet : MonoBehaviour
     /// don't want to see this in our Inspector.
     /// </summary>
     [SerializeField, HideInInspector]
-    private MeshFilter[] meshFilters;
+    private MeshFilter[] terrainMeshFilters;
+
+
+    private WaterFace[] waterFaces;
+
+    [SerializeField, HideInInspector]
+    private MeshFilter[] waterMeshFilters;
 
     /// <summary>
     /// The terrain minimum max.
@@ -62,15 +70,26 @@ public class Planet : MonoBehaviour
         }
 
         this.SetShaderValues();
+
+        this.ToggleObjects(settings.ViewType);
     }
 
     public void Initialize()
     {
-        if (meshFilters == null || meshFilters.Length == 0)
-            meshFilters = new MeshFilter[6];
+        // Terrainfaces
+        if (terrainMeshFilters == null || terrainMeshFilters.Length == 0)
+            terrainMeshFilters = new MeshFilter[6];
 
-        if (terrainFaces == null || terrainFaces.Length == 0 || meshFilters.Any(x => x == null))
+        if (terrainFaces == null || terrainFaces.Length == 0 || terrainMeshFilters.Any(x => x == null))
             terrainFaces = this.CreateTerrainFaces();
+
+        // Waterfaces
+        if (waterMeshFilters == null || waterMeshFilters.Length == 0)
+            waterMeshFilters = new MeshFilter[6];
+
+        if (waterFaces == null || waterFaces.Length == 0 || waterMeshFilters.Any(x => x == null))
+            waterFaces = this.CreateWaterFaces();
+
     }
 
     private TerrainFace[] CreateTerrainFaces()
@@ -84,16 +103,42 @@ public class Planet : MonoBehaviour
         // Create a face for each direction.
         for (var i = 0; i < directions.Length; i++)
         {
-            if (meshFilters[i] == null)
+            if (terrainMeshFilters[i] == null)
             {
-                var terrainObj = new GameObject("Mesh " + directions[i]);
+                var terrainObj = new GameObject("terrain mesh " + directions[i]);
                 terrainObj.transform.parent = transform;
                 terrainObj.AddComponent<MeshRenderer>().sharedMaterial = this.PlanetMaterial;
-                meshFilters[i] = terrainObj.AddComponent<MeshFilter>();
-                meshFilters[i].sharedMesh = new Mesh();
+                terrainMeshFilters[i] = terrainObj.AddComponent<MeshFilter>();
+                terrainMeshFilters[i].sharedMesh = new Mesh();
             }
 
-            faces[i] = new TerrainFace(meshFilters[i].sharedMesh, directions[i], settings);
+            faces[i] = new TerrainFace(terrainMeshFilters[i].sharedMesh, directions[i], settings);
+        }
+
+        return faces;
+    }
+
+    private WaterFace[] CreateWaterFaces()
+    {
+        // Create a local variable for the new faces.
+        var faces = new WaterFace[6];
+
+        // Set the center of this planet in the shader.
+        var center = transform.position;
+
+        // Create a face for each direction.
+        for (var i = 0; i < directions.Length; i++)
+        {
+            if (waterMeshFilters[i] == null)
+            {
+                var waterObj = new GameObject("water mesh " + directions[i]);
+                waterObj.transform.parent = transform;
+                waterObj.AddComponent<MeshRenderer>().sharedMaterial = this.WaterMaterial;
+                waterMeshFilters[i] = waterObj.AddComponent<MeshFilter>();
+                waterMeshFilters[i].sharedMesh = new Mesh();
+            }
+
+            faces[i] = new WaterFace(waterMeshFilters[i].sharedMesh, directions[i], settings);
         }
 
         return faces;
@@ -107,5 +152,17 @@ public class Planet : MonoBehaviour
         this.PlanetMaterial.SetVectorArray("_Colors", settings.WorldColours.Select(x => x.Colour.ColorToVector()).ToArray());
         this.PlanetMaterial.SetFloatArray("_ColorThresholds", settings.WorldColours.Select(x => x.Height).ToArray());
         this.PlanetMaterial.SetInt("_ColorCount", settings.WorldColours.Count());
+    }
+
+    private void ToggleObjects(ViewType type)
+    {
+        foreach (Transform child in transform)
+        {
+            if (child.name.Contains("water"))
+                child.gameObject.SetActive(type == ViewType.All || type == ViewType.Water);
+
+            if (child.name.Contains("terrain"))
+                child.gameObject.SetActive(type == ViewType.All || type == ViewType.Terrain);
+        }
     }
 }

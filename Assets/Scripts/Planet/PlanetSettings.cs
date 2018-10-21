@@ -9,6 +9,8 @@ namespace Assets.Scenes.Scripts
     [Serializable]
     public class PlanetSettings
     {
+        public ViewType ViewType;
+
         [Range(2, 256)]
         public int Resolution;
 
@@ -18,5 +20,12 @@ namespace Assets.Scenes.Scripts
         public List<LayerColour> WorldColours = new List<LayerColour>();
 
         public List<NoiseSettings> LayerSettings = new List<NoiseSettings>();
+    }
+
+    public enum ViewType
+    {
+        All,
+        Water,
+        Terrain
     }
 }
