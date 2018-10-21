@@ -29,31 +29,30 @@
                 {
                     float4 vertex : POSITION; // vertex position
                 };
-
-                // vertex shader outputs ("vertex to fragment")
+                
                 struct vertexOutput
                 {
                     float4 worldPosition: TEXCOORD0;
                     float4 vertex : SV_POSITION; // clip space position
                 };
-
-                // vertex shader
+                
                 vertexOutput vert (vertexInput v)
                 {
                     vertexOutput o;
-                    // transform position to clip space
-                    // (multiply with model*view*projection matrix)
+
                     o.worldPosition = v.vertex;
                     o.vertex = UnityObjectToClipPos(v.vertex);
 
                     return o;
                 }
                 
-                // The list of properties used in this cahder.
+                // The list of properties used in this shader.
                 fixed4 _Center;
                 float _Min;
                 float _Max;
                 float _Scale;
+                
+                // Colouring stuff
                 float _ColorCount;
                 float _ColorThresholds[100];
                 float4 _Colors[100];
