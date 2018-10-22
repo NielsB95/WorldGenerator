@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Assets.Scenes.Scripts;
 using UnityEngine;
 
@@ -23,8 +24,35 @@ public class WaterFace
     public void UpdateMesh()
     {
         this.mesh.Clear();
-        this.mesh.vertices = Vertices.Create(this.settings.Resolution, this.localYAxis, spherical: true);
+        this.mesh.vertices = this.CreateVertices();
         this.mesh.triangles = Triangles.Create(this.settings.Resolution);
         this.mesh.RecalculateNormals();
+    }
+
+    public void UpdateSettings(PlanetSettings settings)
+    {
+        this.settings = settings;
+        this.UpdateMesh();
+    }
+
+    private Vector3[] CreateVertices()
+    {
+        var resolution = this.settings.Resolution;
+        var vertices = Vertices.Create(resolution, this.localYAxis, spherical: true);
+
+        for (int y = 0; y < resolution; y++)
+        {
+            for (int x = 0; x < resolution; x++)
+            {
+                var index = x + (y * resolution);
+                var pointOnUnitSphere = vertices[index];
+
+                pointOnUnitSphere *= this.settings.Scale * settings.WaterHeight;
+
+                vertices[index] = pointOnUnitSphere;
+            }
+        }
+
+        return vertices;
     }
 }

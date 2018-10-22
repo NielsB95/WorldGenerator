@@ -63,6 +63,7 @@ public class Planet : MonoBehaviour
         for (var i = 0; i < directions.Length; i++)
         {
             terrainFaces[i].UpdateSettings(settings);
+            waterFaces[i].UpdateSettings(settings);
 
             // Add the MinMax values of this face.
             PlanetMinMax.AddValue(terrainFaces[0].TerrainMinMax.Min);
@@ -152,6 +153,10 @@ public class Planet : MonoBehaviour
         this.PlanetMaterial.SetVectorArray("_Colors", settings.WorldColours.Select(x => x.Colour.ColorToVector()).ToArray());
         this.PlanetMaterial.SetFloatArray("_ColorThresholds", settings.WorldColours.Select(x => x.Height).ToArray());
         this.PlanetMaterial.SetInt("_ColorCount", settings.WorldColours.Count());
+
+        this.WaterMaterial.SetFloat("_Min", PlanetMinMax.Min);
+        this.WaterMaterial.SetFloat("_Max", PlanetMinMax.Max);
+        this.WaterMaterial.SetFloat("_Scale", settings.Scale);
     }
 
     private void ToggleObjects(ViewType type)

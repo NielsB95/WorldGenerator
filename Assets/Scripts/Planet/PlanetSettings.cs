@@ -17,6 +17,8 @@ namespace Assets.Scenes.Scripts
         [Range(1, 100)]
         public float Scale;
 
+        public float WaterHeight = 0f;
+
         public List<LayerColour> WorldColours = new List<LayerColour>();
 
         public List<NoiseSettings> LayerSettings = new List<NoiseSettings>();
